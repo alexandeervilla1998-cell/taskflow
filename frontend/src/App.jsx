@@ -1,7 +1,17 @@
+import MainLayout from "./layouts/MainLayout";
+
 function App() {
-  return (
-    <h1>TaskFlow</h1>
-  );
+    return (
+        <MainLayout>
+
+            <h2>Dashboard</h2>
+
+            <p>
+                Bienvenido a TaskFlow.
+            </p>
+
+        </MainLayout>
+    );
 }
 
 export default App;
