@@ -4,48 +4,53 @@ import MainLayout from "../layouts/MainLayout";
 import Dashboard from "../pages/dashboard/Dashboard";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
+import NotFound from "../pages/notfound/NotFound";
 
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
 
 const AppRouter = () => {
     return (
-        
 
-            <Routes>
 
-                <Route
-                    path="/"
-                    element={
-                        <ProtectedRoute>
-                            <MainLayout>
-                                <Dashboard />
-                            </MainLayout>
-                        </ProtectedRoute>
-                    }
-                />
+        <Routes>
 
-                <Route
-                    path="/login"
-                    element={
-                        <PublicRoute>
-                            <Login />
-                        </PublicRoute>
-                    }
-                />
+            <Route
+                path="/"
+                element={
+                    <ProtectedRoute>
+                        <MainLayout>
+                            <Dashboard />
+                        </MainLayout>
+                    </ProtectedRoute>
+                }
+            />
 
-                <Route
-                    path="/register"
-                    element={
-                        <PublicRoute>
-                            <Register />
-                        </PublicRoute>
-                    }
-                />
+            <Route
+                path="/login"
+                element={
+                    <PublicRoute>
+                        <Login />
+                    </PublicRoute>
+                }
+            />
 
-            </Routes>
+            <Route
+                path="/register"
+                element={
+                    <PublicRoute>
+                        <Register />
+                    </PublicRoute>
+                }
+            />
+            <Route
+                path="*"
+                element={<NotFound />}
+            />
 
-        
+        </Routes>
+
+
     );
 };
 
