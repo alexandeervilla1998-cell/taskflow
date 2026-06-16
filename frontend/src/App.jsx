@@ -1,15 +1,10 @@
 import MainLayout from "./layouts/MainLayout";
+import Dashboard from "./pages/dashboard/Dashboard";
 
 function App() {
     return (
         <MainLayout>
-
-            <h2>Dashboard</h2>
-
-            <p>
-                Bienvenido a TaskFlow.
-            </p>
-
+            <Dashboard />
         </MainLayout>
     );
 }
