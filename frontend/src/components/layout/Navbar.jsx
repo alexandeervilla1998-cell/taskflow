@@ -1,4 +1,16 @@
+import { useNavigate } from "react-router-dom";
+
+import { useAuth } from "../../hooks/useAuth";
+
 const Navbar = () => {
+    const { usuario, cerrarSesion } = useAuth();
+    const navigate = useNavigate();
+
+    const handleCerrarSesion = () => {
+        cerrarSesion();
+        navigate("/login");
+    };
+
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
 
@@ -15,7 +27,7 @@ const Navbar = () => {
                     </button>
 
                     <span className="fw-semibold text-dark">
-                        Alexander
+                        {usuario?.nombre || "Invitado"}
                     </span>
 
                     <button
@@ -45,7 +57,7 @@ const Navbar = () => {
                         </li>
 
                         <li>
-                            <button className="dropdown-item text-danger">
+                            <button className="dropdown-item text-danger" onClick={handleCerrarSesion}>
                                 Cerrar sesión
                             </button>
                         </li>
