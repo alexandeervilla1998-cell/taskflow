@@ -1,5 +1,16 @@
 # Definición de Tablas TaskFlow
 
+## Tabla: roles
+
+Descripción
+
+Almacena los roles disponibles en el sistema (ADMIN, USER).
+
+| Campo  | Tipo        |
+| ------ | ----------- |
+| id     | BIGINT      |
+| nombre | VARCHAR(50) |
+
 ## Tabla: usuarios
 
 Descripción
@@ -14,6 +25,7 @@ Almacena la información de los usuarios registrados.
 | contraseña     | VARCHAR(255) |
 | foto_perfil    | VARCHAR(255) |
 | fecha_registro | DATETIME     |
+| rol_id         | BIGINT       |
 
 ## Tabla: categorias
 
@@ -50,6 +62,6 @@ Almacena las tareas del sistema.
 
 Base de datos: taskflow
 
-Número de tablas: 3
+Número de tablas: 4
 
-Número de relaciones: 3
+Número de relaciones: 4
