@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.taskflow.dto.EstadisticasDTO;
 import com.taskflow.dto.EstadoRequest;
 import com.taskflow.dto.ResponseDTO;
 import com.taskflow.dto.TareaDTO;
@@ -40,6 +41,11 @@ public class TareaController {
             @AuthenticationPrincipal Usuario usuario) {
         List<TareaDTO> tareas = tareaService.listar(usuario.getId(), estado, categoriaId);
         return ResponseEntity.ok(ResponseDTO.exito(tareas, null));
+    }
+
+    @GetMapping("/estadisticas")
+    public ResponseEntity<ResponseDTO<EstadisticasDTO>> estadisticas(@AuthenticationPrincipal Usuario usuario) {
+        return ResponseEntity.ok(ResponseDTO.exito(tareaService.obtenerEstadisticas(usuario.getId()), null));
     }
 
     @PostMapping

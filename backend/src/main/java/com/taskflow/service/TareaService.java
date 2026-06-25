@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.taskflow.dto.EstadisticasDTO;
 import com.taskflow.dto.TareaDTO;
 import com.taskflow.entity.Categoria;
 import com.taskflow.entity.Tarea;
@@ -70,6 +71,16 @@ public class TareaService {
         tarea.setEstado(estado);
 
         return convertirADTO(tareaRepository.save(tarea));
+    }
+
+    public EstadisticasDTO obtenerEstadisticas(Long usuarioId) {
+        List<Tarea> tareas = tareaRepository.findByUsuarioId(usuarioId);
+
+        long pendientes = tareas.stream().filter(t -> "PENDIENTE".equals(t.getEstado())).count();
+        long enProgreso = tareas.stream().filter(t -> "EN_PROGRESO".equals(t.getEstado())).count();
+        long finalizadas = tareas.stream().filter(t -> "FINALIZADA".equals(t.getEstado())).count();
+
+        return new EstadisticasDTO(tareas.size(), pendientes, enProgreso, finalizadas);
     }
 
     public void eliminar(Long id, Long usuarioId) {
