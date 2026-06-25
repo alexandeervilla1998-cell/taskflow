@@ -1,4 +1,28 @@
+import { useEffect, useState } from "react";
+
+import { obtenerEstadisticas } from "../../services/tareaService";
+
 const Dashboard = () => {
+    const [estadisticas, setEstadisticas] = useState({
+        total: 0,
+        pendientes: 0,
+        enProgreso: 0,
+        finalizadas: 0
+    });
+
+    useEffect(() => {
+        const cargarEstadisticas = async () => {
+            try {
+                const respuesta = await obtenerEstadisticas();
+                setEstadisticas(respuesta.data.datos);
+            } catch {
+                // El dashboard se mantiene en 0 si la API no responde
+            }
+        };
+
+        cargarEstadisticas();
+    }, []);
+
     return (
         <div className="container-fluid">
 
@@ -27,7 +51,7 @@ const Dashboard = () => {
                             </h6>
 
                             <h2 className="fw-bold">
-                                0
+                                {estadisticas.total}
                             </h2>
 
                         </div>
@@ -47,7 +71,7 @@ const Dashboard = () => {
                             </h6>
 
                             <h2 className="fw-bold">
-                                0
+                                {estadisticas.pendientes}
                             </h2>
 
                         </div>
@@ -67,7 +91,7 @@ const Dashboard = () => {
                             </h6>
 
                             <h2 className="fw-bold">
-                                0
+                                {estadisticas.enProgreso}
                             </h2>
 
                         </div>
@@ -87,7 +111,7 @@ const Dashboard = () => {
                             </h6>
 
                             <h2 className="fw-bold">
-                                0
+                                {estadisticas.finalizadas}
                             </h2>
 
                         </div>

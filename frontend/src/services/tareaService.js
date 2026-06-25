@@ -2,6 +2,8 @@ import api from "./api";
 
 export const listarTareas = (filtros = {}) => api.get("/tareas", { params: filtros });
 
+export const obtenerEstadisticas = () => api.get("/tareas/estadisticas");
+
 export const crearTarea = (datos) => api.post("/tareas", datos);
 
 export const actualizarTarea = (id, datos) => api.put(`/tareas/${id}`, datos);
