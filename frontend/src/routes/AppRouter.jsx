@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 
 import MainLayout from "../layouts/MainLayout";
 import Dashboard from "../pages/dashboard/Dashboard";
+import Tasks from "../pages/tasks/Tasks";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 import NotFound from "../pages/notfound/NotFound";
@@ -21,6 +22,17 @@ const AppRouter = () => {
                     <ProtectedRoute>
                         <MainLayout>
                             <Dashboard />
+                        </MainLayout>
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/tasks"
+                element={
+                    <ProtectedRoute>
+                        <MainLayout>
+                            <Tasks />
                         </MainLayout>
                     </ProtectedRoute>
                 }
