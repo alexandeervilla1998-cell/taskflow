@@ -1,5 +1,21 @@
 # Relaciones de la Base de Datos TaskFlow
 
+## Roles - Usuarios
+
+Tipo de relación:
+
+Uno a muchos (1:N)
+
+Descripción:
+
+Un rol puede tener muchos usuarios.
+
+Cada usuario tiene un único rol.
+
+Campo relacionado:
+
+* usuarios.rol_id → roles.id
+
 ## Usuarios - Tareas
 
 Tipo de relación:
@@ -50,6 +66,6 @@ Campo relacionado:
 
 ## Resumen
 
-Relaciones totales: 3
+Relaciones totales: 4
 
 Todas las relaciones mantienen la integridad referencial mediante claves foráneas.
