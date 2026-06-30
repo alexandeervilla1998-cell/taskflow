@@ -38,7 +38,7 @@ const Profile = () => {
         cargar();
     }, []);
 
-    // Reset imgError when photo URL changes so the preview re-attempts the new URL
+    // Resetea imgError al cambiar la URL para que el preview reintente cargar la imagen
     useEffect(() => {
         setImgError(false);
     }, [formPerfil.fotoPerfil]);
@@ -106,7 +106,7 @@ const Profile = () => {
     }
 
     const inicial = perfil?.nombre?.charAt(0).toUpperCase();
-    // Live preview: use form value so avatar updates as user types
+    // Usa el valor del form para que el avatar se actualice mientras el usuario escribe
     const fotoPreview = formPerfil.fotoPerfil && !imgError ? formPerfil.fotoPerfil : null;
 
     const passFields = [
