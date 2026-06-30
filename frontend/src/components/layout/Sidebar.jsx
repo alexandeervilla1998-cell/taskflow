@@ -1,4 +1,6 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+
+import { useAuth } from "../../hooks/useAuth";
 
 const menuItems = [
     {
@@ -24,6 +26,14 @@ const menuItems = [
 ];
 
 const Sidebar = () => {
+    const { cerrarSesion } = useAuth();
+    const navigate = useNavigate();
+
+    const handleCerrarSesion = () => {
+        cerrarSesion();
+        navigate("/login");
+    };
+
     return (
         <aside className="bg-white border-end vh-100 p-3">
 
@@ -77,6 +87,7 @@ const Sidebar = () => {
 
                     <button
                         className="btn btn-link nav-link text-danger text-start px-3"
+                        onClick={handleCerrarSesion}
                     >
 
                         <i className="bi bi-box-arrow-right me-2"></i>

@@ -67,7 +67,8 @@ export const AuthProvider = ({ children }) => {
         isAuthenticated: Boolean(token),
         login,
         registrar,
-        cerrarSesion
+        cerrarSesion,
+        guardarSesion
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
