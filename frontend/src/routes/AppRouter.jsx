@@ -4,6 +4,7 @@ import MainLayout from "../layouts/MainLayout";
 import Dashboard from "../pages/dashboard/Dashboard";
 import Tasks from "../pages/tasks/Tasks";
 import Categories from "../pages/categories/Categories";
+import Profile from "../pages/profile/Profile";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 import NotFound from "../pages/notfound/NotFound";
@@ -45,6 +46,17 @@ const AppRouter = () => {
                     <ProtectedRoute>
                         <MainLayout>
                             <Categories />
+                        </MainLayout>
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/profile"
+                element={
+                    <ProtectedRoute>
+                        <MainLayout>
+                            <Profile />
                         </MainLayout>
                     </ProtectedRoute>
                 }

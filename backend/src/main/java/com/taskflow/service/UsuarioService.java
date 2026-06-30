@@ -52,6 +52,20 @@ public class UsuarioService {
         return passwordEncoder.matches(contrasena, usuario.getContrasena());
     }
 
+    public UsuarioDTO actualizarPerfil(Usuario usuario, String nombre, String fotoPerfil) {
+        usuario.setNombre(nombre);
+        usuario.setFotoPerfil(fotoPerfil);
+        return convertirADTO(usuarioRepository.save(usuario));
+    }
+
+    public void cambiarContrasena(Usuario usuario, String contrasenaActual, String contrasenaNueva) {
+        if (!passwordEncoder.matches(contrasenaActual, usuario.getContrasena())) {
+            throw new IllegalArgumentException("La contraseña actual es incorrecta");
+        }
+        usuario.setContrasena(passwordEncoder.encode(contrasenaNueva));
+        usuarioRepository.save(usuario);
+    }
+
     public UsuarioDTO convertirADTO(Usuario usuario) {
         return new UsuarioDTO(
                 usuario.getId(),
