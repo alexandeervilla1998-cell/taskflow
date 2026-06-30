@@ -21,6 +21,10 @@ const formularioVacio = {
     categoriaId: ""
 };
 
+const colorEstado = { PENDIENTE: "warning", EN_PROGRESO: "info", FINALIZADA: "success" };
+const colorPrioridad = { BAJA: "secondary", MEDIA: "primary", ALTA: "danger" };
+const labelEstado = { PENDIENTE: "Pendiente", EN_PROGRESO: "En progreso", FINALIZADA: "Finalizada" };
+
 const Tasks = () => {
     const [tareas, setTareas] = useState([]);
     const [categorias, setCategorias] = useState([]);
@@ -31,6 +35,7 @@ const Tasks = () => {
     const [tareaEditando, setTareaEditando] = useState(null);
     const [form, setForm] = useState(formularioVacio);
     const [errores, setErrores] = useState({});
+    const [cambiandoEstado, setCambiandoEstado] = useState(null);
 
     const cargarTareas = async () => {
         setCargando(true);
@@ -54,7 +59,7 @@ const Tasks = () => {
             const respuesta = await listarCategorias();
             setCategorias(respuesta.data.datos);
         } catch {
-            Swal.fire("Error", "No se pudieron cargar las categorías", "error");
+            // silencioso — sin categorías, el selector queda vacío
         }
     };
 
@@ -88,10 +93,6 @@ const Tasks = () => {
         setMostrarFormulario(true);
     };
 
-    const cerrarFormulario = () => {
-        setMostrarFormulario(false);
-    };
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         setForm((prev) => ({ ...prev, [name]: value }));
@@ -99,21 +100,14 @@ const Tasks = () => {
 
     const validar = () => {
         const nuevosErrores = {};
-
-        if (!form.titulo.trim()) {
-            nuevosErrores.titulo = "El título es obligatorio";
-        }
-
+        if (!form.titulo.trim()) nuevosErrores.titulo = "El título es obligatorio";
         setErrores(nuevosErrores);
         return Object.keys(nuevosErrores).length === 0;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (!validar()) {
-            return;
-        }
+        if (!validar()) return;
 
         const datos = {
             titulo: form.titulo,
@@ -129,7 +123,6 @@ const Tasks = () => {
             } else {
                 await crearTarea(datos);
             }
-
             setMostrarFormulario(false);
             cargarTareas();
         } catch (error) {
@@ -139,11 +132,14 @@ const Tasks = () => {
     };
 
     const handleCambiarEstado = async (tarea, nuevoEstado) => {
+        setCambiandoEstado(tarea.id);
         try {
             await actualizarEstadoTarea(tarea.id, nuevoEstado);
             cargarTareas();
         } catch {
             Swal.fire("Error", "No se pudo actualizar el estado", "error");
+        } finally {
+            setCambiandoEstado(null);
         }
     };
 
@@ -154,12 +150,11 @@ const Tasks = () => {
             icon: "warning",
             showCancelButton: true,
             confirmButtonText: "Eliminar",
-            cancelButtonText: "Cancelar"
+            cancelButtonText: "Cancelar",
+            confirmButtonColor: "#dc3545"
         });
 
-        if (!resultado.isConfirmed) {
-            return;
-        }
+        if (!resultado.isConfirmed) return;
 
         try {
             await eliminarTarea(tarea.id);
@@ -179,64 +174,117 @@ const Tasks = () => {
                 </button>
             </div>
 
-            <div className="row g-2 mb-4">
-                <div className="col-auto">
-                    <select className="form-select" value={filtroEstado} onChange={(e) => setFiltroEstado(e.target.value)}>
-                        <option value="">Todos los estados</option>
-                        {ESTADOS.map((estado) => (
-                            <option key={estado} value={estado}>{estado}</option>
-                        ))}
-                    </select>
-                </div>
+            {/* Filtros */}
+            <div className="d-flex flex-wrap gap-2 mb-4">
+                <select
+                    className="form-select w-auto"
+                    value={filtroEstado}
+                    onChange={(e) => setFiltroEstado(e.target.value)}
+                >
+                    <option value="">Todos los estados</option>
+                    {ESTADOS.map((e) => (
+                        <option key={e} value={e}>{labelEstado[e]}</option>
+                    ))}
+                </select>
 
-                <div className="col-auto">
-                    <select className="form-select" value={filtroCategoria} onChange={(e) => setFiltroCategoria(e.target.value)}>
-                        <option value="">Todas las categorías</option>
-                        {categorias.map((categoria) => (
-                            <option key={categoria.id} value={categoria.id}>{categoria.nombre}</option>
-                        ))}
-                    </select>
-                </div>
+                <select
+                    className="form-select w-auto"
+                    value={filtroCategoria}
+                    onChange={(e) => setFiltroCategoria(e.target.value)}
+                >
+                    <option value="">Todas las categorías</option>
+                    {categorias.map((c) => (
+                        <option key={c.id} value={c.id}>{c.nombre}</option>
+                    ))}
+                </select>
             </div>
 
+            {/* Contenido */}
             {cargando ? (
-                <p>Cargando...</p>
+                <div className="row g-3">
+                    {[1, 2, 3].map((i) => (
+                        <div className="col-md-6 col-lg-4" key={i}>
+                            <div className="card shadow-sm border-0 placeholder-glow">
+                                <div className="card-body">
+                                    <span className="placeholder col-8 mb-2 d-block"></span>
+                                    <span className="placeholder col-5 mb-3 d-block"></span>
+                                    <span className="placeholder col-full d-block" style={{ height: "2rem" }}></span>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             ) : tareas.length === 0 ? (
-                <p className="text-muted">No tienes tareas registradas.</p>
+                <div className="text-center py-5 text-muted">
+                    <i className="bi bi-clipboard-x" style={{ fontSize: "3rem", opacity: 0.4 }}></i>
+                    <p className="mt-3 fs-5">
+                        {filtroEstado || filtroCategoria
+                            ? "No hay tareas con esos filtros."
+                            : "Todavía no tienes tareas."}
+                    </p>
+                    {!filtroEstado && !filtroCategoria && (
+                        <button className="btn btn-primary" onClick={abrirCrear}>
+                            <i className="bi bi-plus-lg me-1"></i>
+                            Crear primera tarea
+                        </button>
+                    )}
+                </div>
             ) : (
                 <div className="row g-3">
                     {tareas.map((tarea) => (
                         <div className="col-md-6 col-lg-4" key={tarea.id}>
                             <div className="card shadow-sm border-0 h-100">
-                                <div className="card-body">
-                                    <div className="d-flex justify-content-between">
-                                        <h5 className="card-title">{tarea.titulo}</h5>
-                                        <span className="badge bg-secondary">{tarea.prioridad}</span>
+                                <div className={`card-header bg-${colorEstado[tarea.estado]} bg-opacity-10 border-0 py-2`}>
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <span className={`badge bg-${colorEstado[tarea.estado]}`}>
+                                            {labelEstado[tarea.estado]}
+                                        </span>
+                                        <span className={`badge bg-${colorPrioridad[tarea.prioridad]} bg-opacity-75`}>
+                                            {tarea.prioridad}
+                                        </span>
                                     </div>
+                                </div>
+                                <div className="card-body d-flex flex-column">
+                                    <h5 className="card-title mb-1">{tarea.titulo}</h5>
 
-                                    <p className="card-text text-muted">{tarea.descripcion}</p>
-
-                                    {tarea.categoriaNombre && (
-                                        <span className="badge bg-light text-dark border mb-2">{tarea.categoriaNombre}</span>
+                                    {tarea.descripcion && (
+                                        <p className="card-text text-muted small mb-2">{tarea.descripcion}</p>
                                     )}
 
-                                    <select
-                                        className="form-select form-select-sm mb-2"
-                                        value={tarea.estado}
-                                        onChange={(e) => handleCambiarEstado(tarea, e.target.value)}
-                                    >
-                                        {ESTADOS.map((estado) => (
-                                            <option key={estado} value={estado}>{estado}</option>
-                                        ))}
-                                    </select>
+                                    {tarea.categoriaNombre && (
+                                        <span className="badge bg-light text-dark border mb-2 w-auto align-self-start">
+                                            <i className="bi bi-folder me-1"></i>
+                                            {tarea.categoriaNombre}
+                                        </span>
+                                    )}
 
-                                    <div className="d-flex gap-2">
-                                        <button className="btn btn-sm btn-outline-primary" onClick={() => abrirEditar(tarea)}>
-                                            Editar
-                                        </button>
-                                        <button className="btn btn-sm btn-outline-danger" onClick={() => handleEliminar(tarea)}>
-                                            Eliminar
-                                        </button>
+                                    <div className="mt-auto">
+                                        <select
+                                            className="form-select form-select-sm mb-2"
+                                            value={tarea.estado}
+                                            disabled={cambiandoEstado === tarea.id}
+                                            onChange={(e) => handleCambiarEstado(tarea, e.target.value)}
+                                        >
+                                            {ESTADOS.map((e) => (
+                                                <option key={e} value={e}>{labelEstado[e]}</option>
+                                            ))}
+                                        </select>
+
+                                        <div className="d-flex gap-2">
+                                            <button
+                                                className="btn btn-sm btn-outline-primary flex-grow-1"
+                                                onClick={() => abrirEditar(tarea)}
+                                            >
+                                                <i className="bi bi-pencil me-1"></i>
+                                                Editar
+                                            </button>
+                                            <button
+                                                className="btn btn-sm btn-outline-danger"
+                                                onClick={() => handleEliminar(tarea)}
+                                            >
+                                                <i className="bi bi-trash"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -245,14 +293,17 @@ const Tasks = () => {
                 </div>
             )}
 
+            {/* Modal formulario */}
             {mostrarFormulario && (
                 <div className="modal d-block" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
                     <div className="modal-dialog">
                         <div className="modal-content">
                             <form onSubmit={handleSubmit}>
                                 <div className="modal-header">
-                                    <h5 className="modal-title">{tareaEditando ? "Editar tarea" : "Nueva tarea"}</h5>
-                                    <button type="button" className="btn-close" onClick={cerrarFormulario}></button>
+                                    <h5 className="modal-title">
+                                        {tareaEditando ? "Editar tarea" : "Nueva tarea"}
+                                    </h5>
+                                    <button type="button" className="btn-close" onClick={() => setMostrarFormulario(false)}></button>
                                 </div>
 
                                 <div className="modal-body">
@@ -264,6 +315,7 @@ const Tasks = () => {
                                             className={`form-control ${errores.titulo ? "is-invalid" : ""}`}
                                             value={form.titulo}
                                             onChange={handleChange}
+                                            autoFocus
                                         />
                                         {errores.titulo && <div className="invalid-feedback">{errores.titulo}</div>}
                                     </div>
@@ -273,45 +325,48 @@ const Tasks = () => {
                                         <textarea
                                             name="descripcion"
                                             className="form-control"
+                                            rows={3}
                                             value={form.descripcion}
                                             onChange={handleChange}
                                         />
                                     </div>
 
-                                    <div className="mb-3">
-                                        <label className="form-label">Estado</label>
-                                        <select name="estado" className="form-select" value={form.estado} onChange={handleChange}>
-                                            {ESTADOS.map((estado) => (
-                                                <option key={estado} value={estado}>{estado}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-
-                                    <div className="mb-3">
-                                        <label className="form-label">Prioridad</label>
-                                        <select name="prioridad" className="form-select" value={form.prioridad} onChange={handleChange}>
-                                            {PRIORIDADES.map((prioridad) => (
-                                                <option key={prioridad} value={prioridad}>{prioridad}</option>
-                                            ))}
-                                        </select>
+                                    <div className="row g-2 mb-3">
+                                        <div className="col">
+                                            <label className="form-label">Estado</label>
+                                            <select name="estado" className="form-select" value={form.estado} onChange={handleChange}>
+                                                {ESTADOS.map((e) => (
+                                                    <option key={e} value={e}>{labelEstado[e]}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="col">
+                                            <label className="form-label">Prioridad</label>
+                                            <select name="prioridad" className="form-select" value={form.prioridad} onChange={handleChange}>
+                                                {PRIORIDADES.map((p) => (
+                                                    <option key={p} value={p}>{p}</option>
+                                                ))}
+                                            </select>
+                                        </div>
                                     </div>
 
                                     <div className="mb-3">
                                         <label className="form-label">Categoría</label>
                                         <select name="categoriaId" className="form-select" value={form.categoriaId} onChange={handleChange}>
                                             <option value="">Sin categoría</option>
-                                            {categorias.map((categoria) => (
-                                                <option key={categoria.id} value={categoria.id}>{categoria.nombre}</option>
+                                            {categorias.map((c) => (
+                                                <option key={c.id} value={c.id}>{c.nombre}</option>
                                             ))}
                                         </select>
                                     </div>
                                 </div>
 
                                 <div className="modal-footer">
-                                    <button type="button" className="btn btn-light" onClick={cerrarFormulario}>
+                                    <button type="button" className="btn btn-light" onClick={() => setMostrarFormulario(false)}>
                                         Cancelar
                                     </button>
                                     <button type="submit" className="btn btn-primary">
+                                        <i className="bi bi-check-lg me-1"></i>
                                         Guardar
                                     </button>
                                 </div>
