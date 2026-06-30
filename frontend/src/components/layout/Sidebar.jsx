@@ -3,13 +3,13 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 
 const menuItems = [
-    { title: "Dashboard", icon: "bi bi-grid-fill", path: "/" },
-    { title: "Mis tareas", icon: "bi bi-list-task", path: "/tasks" },
-    { title: "Categorías", icon: "bi bi-folder-fill", path: "/categories" },
-    { title: "Perfil", icon: "bi bi-person-fill", path: "/profile" }
+    { title: "Dashboard",   icon: "bi-grid-fill",    path: "/" },
+    { title: "Mis tareas",  icon: "bi-list-task",    path: "/tasks" },
+    { title: "Categorías",  icon: "bi-folder-fill",  path: "/categories" },
+    { title: "Perfil",      icon: "bi-person-fill",  path: "/profile" },
 ];
 
-const Sidebar = () => {
+const Sidebar = ({ onClose }) => {
     const { cerrarSesion } = useAuth();
     const navigate = useNavigate();
 
@@ -19,46 +19,55 @@ const Sidebar = () => {
     };
 
     return (
-        <aside className="d-flex flex-column bg-white border-end vh-100 p-3" style={{ minWidth: "220px" }}>
-
-            <div className="d-flex align-items-center gap-2 mb-4 px-2">
-                <i className="bi bi-check2-square text-primary fs-4"></i>
-                <span className="fw-bold text-primary fs-5">TaskFlow</span>
+        <aside className="tf-sidebar">
+            {/* Brand */}
+            <div className="tf-sidebar-brand">
+                <i className="bi bi-check2-square" style={{ fontSize: "1.3rem" }}></i>
+                TaskFlow
+                {onClose && (
+                    <button
+                        onClick={onClose}
+                        style={{
+                            marginLeft: "auto", background: "none", border: "none",
+                            color: "var(--tf-muted)", cursor: "pointer", fontSize: "1.1rem"
+                        }}
+                    >
+                        <i className="bi bi-x-lg"></i>
+                    </button>
+                )}
             </div>
 
-            <nav className="flex-grow-1">
-                <ul className="nav flex-column gap-1">
-                    {menuItems.map((item) => (
-                        <li className="nav-item" key={item.title}>
-                            <NavLink
-                                to={item.path}
-                                end={item.path === "/"}
-                                className={({ isActive }) =>
-                                    `nav-link d-flex align-items-center gap-2 rounded px-3 py-2 fw-medium ${
-                                        isActive
-                                            ? "bg-primary text-white"
-                                            : "text-secondary"
-                                    }`
-                                }
-                            >
-                                <i className={item.icon}></i>
-                                {item.title}
-                            </NavLink>
-                        </li>
-                    ))}
-                </ul>
+            {/* Nav */}
+            <nav style={{ flexGrow: 1 }}>
+                <p style={{ fontSize: "0.68rem", color: "var(--tf-muted)", letterSpacing: "0.12em", textTransform: "uppercase", padding: "0 0.5rem", marginBottom: "0.5rem" }}>
+                    Navegación
+                </p>
+                {menuItems.map((item) => (
+                    <NavLink
+                        key={item.title}
+                        to={item.path}
+                        end={item.path === "/"}
+                        className={({ isActive }) => `tf-nav-link${isActive ? " active" : ""}`}
+                        onClick={onClose}
+                    >
+                        <i className={`bi ${item.icon}`} style={{ fontSize: "1rem" }}></i>
+                        {item.title}
+                    </NavLink>
+                ))}
             </nav>
 
-            <div className="border-top pt-3">
+            {/* Footer */}
+            <div>
+                <hr style={{ borderColor: "var(--tf-border)", margin: "1rem 0" }} />
                 <button
-                    className="btn btn-link nav-link text-danger d-flex align-items-center gap-2 px-3 w-100 text-start"
+                    className="tf-nav-link"
+                    style={{ border: "none", cursor: "pointer", width: "100%", background: "none", color: "var(--tf-danger)" }}
                     onClick={handleCerrarSesion}
                 >
                     <i className="bi bi-box-arrow-right"></i>
                     Cerrar sesión
                 </button>
             </div>
-
         </aside>
     );
 };

@@ -8,42 +8,51 @@ const MainLayout = ({ children }) => {
     const [sidebarAbierto, setSidebarAbierto] = useState(false);
 
     return (
-        <div className="d-flex flex-column min-vh-100">
+        <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", background: "var(--tf-bg)" }}>
 
             <Navbar onToggleSidebar={() => setSidebarAbierto((prev) => !prev)} />
 
-            <div className="d-flex flex-grow-1" style={{ overflow: "hidden" }}>
+            <div style={{ display: "flex", flexGrow: 1, overflow: "hidden" }}>
 
                 {/* Sidebar desktop */}
-                <div className="d-none d-md-flex flex-shrink-0" style={{ width: "220px" }}>
+                <div className="d-none d-md-flex" style={{ flexShrink: 0 }}>
                     <Sidebar />
                 </div>
 
-                {/* Sidebar móvil — offcanvas manual */}
+                {/* Sidebar móvil offcanvas */}
                 {sidebarAbierto && (
                     <>
                         <div
-                            className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50"
-                            style={{ zIndex: 1040 }}
                             onClick={() => setSidebarAbierto(false)}
-                        ></div>
-                        <div
-                            className="position-fixed top-0 start-0 h-100 bg-white shadow"
-                            style={{ zIndex: 1050, width: "260px" }}
-                        >
+                            style={{
+                                position: "fixed", inset: 0,
+                                background: "rgba(0,0,0,0.7)",
+                                backdropFilter: "blur(4px)",
+                                zIndex: 1040
+                            }}
+                        />
+                        <div style={{
+                            position: "fixed", top: 0, left: 0, height: "100%",
+                            zIndex: 1050, width: "240px",
+                            boxShadow: "4px 0 32px rgba(0,0,0,0.5)"
+                        }}>
                             <Sidebar onClose={() => setSidebarAbierto(false)} />
                         </div>
                     </>
                 )}
 
-                <main className="flex-grow-1 p-3 p-md-4" style={{ overflowY: "auto", minWidth: 0 }}>
+                {/* Contenido principal */}
+                <main style={{
+                    flexGrow: 1, padding: "1.5rem",
+                    overflowY: "auto", minWidth: 0,
+                    background: "var(--tf-bg)"
+                }}>
                     {children}
                 </main>
 
             </div>
 
             <Footer />
-
         </div>
     );
 };
