@@ -2,40 +2,25 @@ const Footer = () => {
     const year = new Date().getFullYear();
 
     return (
-        <footer className="bg-white border-top shadow-sm mt-auto">
-
-            <div className="container-fluid py-3">
-
-                <div className="d-flex flex-column flex-md-row justify-content-between align-items-center">
-
-                    <div>
-
-                        <h6 className="fw-bold text-primary mb-1">
-                            TaskFlow
-                        </h6>
-
-                        <small className="text-muted">
-                            Sistema de gestión de tareas
-                        </small>
-
-                    </div>
-
-                    <div className="text-center text-md-end mt-3 mt-md-0">
-
-                        <small className="d-block text-muted">
-                            Versión 1.0.0
-                        </small>
-
-                        <small className="text-muted">
-                            © {year} TaskFlow
-                        </small>
-
-                    </div>
-
-                </div>
-
-            </div>
-
+        <footer style={{
+            background: "rgba(7,11,20,0.95)",
+            borderTop: "1px solid rgba(56,139,253,0.15)",
+            padding: "1rem 1.5rem",
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: "0.5rem",
+        }}>
+            <span style={{ fontWeight: 700, fontSize: "0.9rem", color: "#388bfd", textShadow: "0 0 12px rgba(56,139,253,0.4)" }}>
+                Task<span style={{ color: "#58d6f5" }}>Flow</span>
+                <span style={{ fontWeight: 400, fontSize: "0.75rem", color: "#718096", marginLeft: "0.5rem" }}>
+                    Sistema de gestión de tareas
+                </span>
+            </span>
+            <span style={{ fontSize: "0.75rem", color: "#718096" }}>
+                v1.0.0 &nbsp;·&nbsp; © {year} TaskFlow
+            </span>
         </footer>
     );
 };

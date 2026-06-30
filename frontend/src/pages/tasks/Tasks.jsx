@@ -14,9 +14,9 @@ const ESTADO_META = {
 };
 
 const PRIORIDAD_META = {
-    BAJA:  { badge: "tf-badge-gray",  label: "Baja" },
-    MEDIA: { badge: "tf-badge-blue",  label: "Media" },
-    ALTA:  { badge: "tf-badge-red",   label: "Alta" },
+    BAJA:  { badge: "tf-badge-gray", label: "Baja"  },
+    MEDIA: { badge: "tf-badge-blue", label: "Media" },
+    ALTA:  { badge: "tf-badge-red",  label: "Alta"  },
 };
 
 const swalConfig = { background: "#0d1426", color: "#e2e8f0", confirmButtonColor: "#388bfd" };
@@ -67,7 +67,13 @@ const Tasks = () => {
         cargarTareas();
     }, [filtroEstado, filtroCategoria]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const abrirCrear = () => { setTareaEditando(null); setForm(formularioVacio); setErrores({}); setMostrarFormulario(true); };
+    const abrirCrear = () => {
+        setTareaEditando(null);
+        setForm(formularioVacio);
+        setErrores({});
+        setMostrarFormulario(true);
+    };
+
     const abrirEditar = (t) => {
         setTareaEditando(t);
         setForm({ titulo: t.titulo, descripcion: t.descripcion || "", estado: t.estado, prioridad: t.prioridad, categoriaId: t.categoriaId || "" });
@@ -90,7 +96,13 @@ const Tasks = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!validar()) return;
-        const datos = { titulo: form.titulo, descripcion: form.descripcion, estado: form.estado, prioridad: form.prioridad, categoriaId: form.categoriaId ? Number(form.categoriaId) : null };
+        const datos = {
+            titulo: form.titulo,
+            descripcion: form.descripcion,
+            estado: form.estado,
+            prioridad: form.prioridad,
+            categoriaId: form.categoriaId ? Number(form.categoriaId) : null,
+        };
         try {
             if (tareaEditando) await actualizarTarea(tareaEditando.id, datos);
             else await crearTarea(datos);
@@ -122,7 +134,7 @@ const Tasks = () => {
             confirmButtonText: "Eliminar",
             cancelButtonText: "Cancelar",
             confirmButtonColor: "#e53e3e",
-            ...swalConfig
+            ...swalConfig,
         });
         if (!r.isConfirmed) return;
         try {
@@ -136,7 +148,7 @@ const Tasks = () => {
     return (
         <div>
             {/* Header */}
-            <div className="animate-fadeIn" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+            <div className="animate-fadeIn" style={s.header}>
                 <div>
                     <h2 className="tf-page-title">Mis <span className="tf-glow-text">tareas</span></h2>
                     <p className="tf-page-subtitle">{tareas.length} tarea{tareas.length !== 1 ? "s" : ""} encontrada{tareas.length !== 1 ? "s" : ""}</p>
@@ -148,37 +160,37 @@ const Tasks = () => {
             </div>
 
             {/* Filtros */}
-            <div className="animate-slideLeft mb-4" style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem" }}>
-                <select className="tf-select" value={filtroEstado} onChange={(e) => setFiltroEstado(e.target.value)} style={{ minWidth: "160px" }}>
+            <div className="animate-slideLeft mb-4" style={s.filtros}>
+                <select className="tf-select" value={filtroEstado} onChange={(e) => setFiltroEstado(e.target.value)} style={s.filtroSelect}>
                     <option value="">Todos los estados</option>
                     {ESTADOS.map((e) => <option key={e} value={e}>{ESTADO_META[e].label}</option>)}
                 </select>
-                <select className="tf-select" value={filtroCategoria} onChange={(e) => setFiltroCategoria(e.target.value)} style={{ minWidth: "160px" }}>
+                <select className="tf-select" value={filtroCategoria} onChange={(e) => setFiltroCategoria(e.target.value)} style={s.filtroSelect}>
                     <option value="">Todas las categorías</option>
                     {categorias.map((c) => <option key={c.id} value={c.id}>{c.nombre}</option>)}
                 </select>
             </div>
 
-            {/* Grid */}
+            {/* Grid de tareas */}
             {cargando ? (
                 <div className="row g-3">
                     {[1, 2, 3].map((i) => (
                         <div className="col-md-6 col-lg-4" key={i}>
-                            <div className="tf-task-card" style={{ opacity: 0.4 }}>
-                                <div style={{ height: "12px", background: "rgba(255,255,255,0.06)", borderRadius: "4px", width: "60%" }}></div>
-                                <div style={{ height: "10px", background: "rgba(255,255,255,0.04)", borderRadius: "4px", width: "40%" }}></div>
-                                <div style={{ height: "32px", background: "rgba(255,255,255,0.04)", borderRadius: "8px" }}></div>
+                            <div className="tf-task-card" style={s.skeletonCard}>
+                                <div style={s.skeletonRow1}></div>
+                                <div style={s.skeletonRow2}></div>
+                                <div style={s.skeletonRow3}></div>
                             </div>
                         </div>
                     ))}
                 </div>
             ) : tareas.length === 0 ? (
-                <div className="tf-card animate-fadeIn text-center" style={{ padding: "3rem" }}>
-                    <i className="bi bi-clipboard-x animate-float" style={{ fontSize: "3rem", color: "var(--tf-muted)", display: "block", marginBottom: "1rem" }}></i>
-                    <h5 style={{ color: "var(--tf-text)", marginBottom: "0.5rem" }}>
+                <div className="tf-card animate-fadeIn text-center" style={s.emptyCard}>
+                    <i className="bi bi-clipboard-x animate-float" style={s.emptyIcon}></i>
+                    <h5 style={s.emptyTitle}>
                         {filtroEstado || filtroCategoria ? "Sin resultados" : "Sin tareas aún"}
                     </h5>
-                    <p style={{ color: "var(--tf-muted)", fontSize: "0.85rem", marginBottom: "1.5rem" }}>
+                    <p style={s.emptyText}>
                         {filtroEstado || filtroCategoria ? "Prueba con otros filtros." : "Crea tu primera tarea para empezar."}
                     </p>
                     {!filtroEstado && !filtroCategoria && (
@@ -193,8 +205,8 @@ const Tasks = () => {
                     {tareas.map((tarea, i) => (
                         <div className={`col-md-6 col-lg-4 animate-slideUp delay-${Math.min(i + 1, 4)}`} key={tarea.id}>
                             <div className="tf-task-card">
-                                {/* Top badges */}
-                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                {/* Badges de estado y prioridad */}
+                                <div style={s.cardBadgeRow}>
                                     <span className={`tf-badge ${ESTADO_META[tarea.estado].badge}`}>
                                         {ESTADO_META[tarea.estado].label}
                                     </span>
@@ -203,29 +215,24 @@ const Tasks = () => {
                                     </span>
                                 </div>
 
-                                {/* Título */}
-                                <h6 style={{ color: "var(--tf-text)", fontWeight: 600, margin: "0.25rem 0 0" }}>
-                                    {tarea.titulo}
-                                </h6>
+                                <h6 style={s.cardTitulo}>{tarea.titulo}</h6>
 
                                 {tarea.descripcion && (
-                                    <p style={{ color: "var(--tf-muted)", fontSize: "0.8rem", margin: 0, lineHeight: "1.5" }}>
-                                        {tarea.descripcion}
-                                    </p>
+                                    <p style={s.cardDescripcion}>{tarea.descripcion}</p>
                                 )}
 
                                 {tarea.categoriaNombre && (
-                                    <span className="tf-badge tf-badge-gray" style={{ alignSelf: "flex-start" }}>
+                                    <span className="tf-badge tf-badge-gray" style={s.cardCategoria}>
                                         <i className="bi bi-folder me-1"></i>
                                         {tarea.categoriaNombre}
                                     </span>
                                 )}
 
-                                <div style={{ marginTop: "auto" }}>
-                                    {/* Cambiar estado */}
+                                <div style={s.cardFooter}>
+                                    {/* El select empuja el estado directamente sin submit */}
                                     <select
                                         className="tf-select"
-                                        style={{ width: "100%", marginBottom: "0.6rem", fontSize: "0.8rem" }}
+                                        style={s.selectEstado}
                                         value={tarea.estado}
                                         disabled={cambiandoEstado === tarea.id}
                                         onChange={(e) => handleCambiarEstado(tarea, e.target.value)}
@@ -233,11 +240,10 @@ const Tasks = () => {
                                         {ESTADOS.map((e) => <option key={e} value={e}>{ESTADO_META[e].label}</option>)}
                                     </select>
 
-                                    {/* Acciones */}
-                                    <div style={{ display: "flex", gap: "0.5rem" }}>
+                                    <div style={s.acciones}>
                                         <button
                                             className="tf-btn tf-btn-ghost"
-                                            style={{ flexGrow: 1, fontSize: "0.82rem", padding: "0.4rem 0.75rem" }}
+                                            style={s.btnEditar}
                                             onClick={() => abrirEditar(tarea)}
                                         >
                                             <i className="bi bi-pencil"></i>
@@ -245,10 +251,7 @@ const Tasks = () => {
                                         </button>
                                         <button
                                             className="tf-btn"
-                                            style={{
-                                                background: "rgba(252,129,129,0.08)", border: "1px solid rgba(252,129,129,0.25)",
-                                                color: "var(--tf-danger)", padding: "0.4rem 0.7rem", fontSize: "0.85rem"
-                                            }}
+                                            style={s.btnEliminar}
                                             onClick={() => handleEliminar(tarea)}
                                         >
                                             <i className="bi bi-trash"></i>
@@ -261,18 +264,17 @@ const Tasks = () => {
                 </div>
             )}
 
-            {/* Modal */}
+            {/* Modal crear/editar */}
             {mostrarFormulario && (
                 <div className="tf-modal-backdrop">
                     <div className="tf-modal">
                         <form onSubmit={handleSubmit}>
                             <div className="tf-modal-header">
                                 <span className="tf-modal-title">
-                                    <i className={`bi ${tareaEditando ? "bi-pencil" : "bi-plus-circle"} me-2`} style={{ color: "var(--tf-primary)" }}></i>
+                                    <i className={`bi ${tareaEditando ? "bi-pencil" : "bi-plus-circle"} me-2`} style={s.modalIcono}></i>
                                     {tareaEditando ? "Editar tarea" : "Nueva tarea"}
                                 </span>
-                                <button type="button" onClick={() => setMostrarFormulario(false)}
-                                    style={{ background: "none", border: "none", color: "var(--tf-muted)", cursor: "pointer", fontSize: "1.1rem" }}>
+                                <button type="button" onClick={() => setMostrarFormulario(false)} style={s.btnCerrar}>
                                     <i className="bi bi-x-lg"></i>
                                 </button>
                             </div>
@@ -282,7 +284,7 @@ const Tasks = () => {
                                     <label className="tf-label">Título</label>
                                     <input
                                         type="text" name="titulo" className="tf-input"
-                                        style={{ width: "100%" }} value={form.titulo}
+                                        style={s.inputFull} value={form.titulo}
                                         onChange={handleChange} autoFocus placeholder="Nombre de la tarea"
                                     />
                                     {errores.titulo && <div className="tf-error">{errores.titulo}</div>}
@@ -292,22 +294,22 @@ const Tasks = () => {
                                     <label className="tf-label">Descripción</label>
                                     <textarea
                                         name="descripcion" className="tf-input"
-                                        style={{ width: "100%", minHeight: "80px", resize: "vertical" }}
+                                        style={s.textarea}
                                         value={form.descripcion} onChange={handleChange}
                                         placeholder="Descripción opcional..."
                                     />
                                 </div>
 
-                                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }} className="mb-3">
+                                <div style={s.gridDosCol} className="mb-3">
                                     <div>
                                         <label className="tf-label">Estado</label>
-                                        <select name="estado" className="tf-select" style={{ width: "100%" }} value={form.estado} onChange={handleChange}>
+                                        <select name="estado" className="tf-select" style={s.inputFull} value={form.estado} onChange={handleChange}>
                                             {ESTADOS.map((e) => <option key={e} value={e}>{ESTADO_META[e].label}</option>)}
                                         </select>
                                     </div>
                                     <div>
                                         <label className="tf-label">Prioridad</label>
-                                        <select name="prioridad" className="tf-select" style={{ width: "100%" }} value={form.prioridad} onChange={handleChange}>
+                                        <select name="prioridad" className="tf-select" style={s.inputFull} value={form.prioridad} onChange={handleChange}>
                                             {PRIORIDADES.map((p) => <option key={p} value={p}>{PRIORIDAD_META[p].label}</option>)}
                                         </select>
                                     </div>
@@ -315,7 +317,7 @@ const Tasks = () => {
 
                                 <div className="mb-2">
                                     <label className="tf-label">Categoría</label>
-                                    <select name="categoriaId" className="tf-select" style={{ width: "100%" }} value={form.categoriaId} onChange={handleChange}>
+                                    <select name="categoriaId" className="tf-select" style={s.inputFull} value={form.categoriaId} onChange={handleChange}>
                                         <option value="">Sin categoría</option>
                                         {categorias.map((c) => <option key={c.id} value={c.id}>{c.nombre}</option>)}
                                     </select>
@@ -337,6 +339,43 @@ const Tasks = () => {
             )}
         </div>
     );
+};
+
+const s = {
+    // Layout header
+    header:        { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" },
+    filtros:       { display: "flex", flexWrap: "wrap", gap: "0.75rem" },
+    filtroSelect:  { minWidth: "160px" },
+
+    // Skeleton loading
+    skeletonCard:  { opacity: 0.4 },
+    skeletonRow1:  { height: "12px", background: "rgba(255,255,255,0.06)", borderRadius: "4px", width: "60%" },
+    skeletonRow2:  { height: "10px", background: "rgba(255,255,255,0.04)", borderRadius: "4px", width: "40%" },
+    skeletonRow3:  { height: "32px", background: "rgba(255,255,255,0.04)", borderRadius: "8px" },
+
+    // Estado vacío
+    emptyCard:     { padding: "3rem" },
+    emptyIcon:     { fontSize: "3rem", color: "var(--tf-muted)", display: "block", marginBottom: "1rem" },
+    emptyTitle:    { color: "var(--tf-text)", marginBottom: "0.5rem" },
+    emptyText:     { color: "var(--tf-muted)", fontSize: "0.85rem", marginBottom: "1.5rem" },
+
+    // Tarjeta de tarea
+    cardBadgeRow:  { display: "flex", justifyContent: "space-between", alignItems: "center" },
+    cardTitulo:    { color: "var(--tf-text)", fontWeight: 600, margin: "0.25rem 0 0" },
+    cardDescripcion: { color: "var(--tf-muted)", fontSize: "0.8rem", margin: 0, lineHeight: "1.5" },
+    cardCategoria: { alignSelf: "flex-start" },
+    cardFooter:    { marginTop: "auto" },
+    selectEstado:  { width: "100%", marginBottom: "0.6rem", fontSize: "0.8rem" },
+    acciones:      { display: "flex", gap: "0.5rem" },
+    btnEditar:     { flexGrow: 1, fontSize: "0.82rem", padding: "0.4rem 0.75rem" },
+    btnEliminar:   { background: "rgba(252,129,129,0.08)", border: "1px solid rgba(252,129,129,0.25)", color: "var(--tf-danger)", padding: "0.4rem 0.7rem", fontSize: "0.85rem" },
+
+    // Modal
+    modalIcono:    { color: "var(--tf-primary)" },
+    btnCerrar:     { background: "none", border: "none", color: "var(--tf-muted)", cursor: "pointer", fontSize: "1.1rem" },
+    inputFull:     { width: "100%" },
+    textarea:      { width: "100%", minHeight: "80px", resize: "vertical" },
+    gridDosCol:    { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" },
 };
 
 export default Tasks;

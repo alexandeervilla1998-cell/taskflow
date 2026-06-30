@@ -141,12 +141,7 @@ const UniverseCanvas = () => {
         };
     }, []);
 
-    return (
-        <canvas
-            ref={canvasRef}
-            style={{ position: "fixed", inset: 0, width: "100%", height: "100%", zIndex: 0, display: "block" }}
-        />
-    );
+    return <canvas ref={canvasRef} style={s.canvas} />;
 };
 
 const Register = () => {
@@ -186,67 +181,40 @@ const Register = () => {
     };
 
     const fields = [
-        { name: "nombre",    icon: "bi-person",   type: "text",     placeholder: "Tu nombre completo",  label: "Nombre" },
-        { name: "correo",    icon: "bi-envelope",  type: "email",    placeholder: "tu@correo.com",       label: "Correo electrónico" },
-        { name: "contrasena",icon: "bi-lock",      type: "password", placeholder: "Mínimo 8 caracteres", label: "Contraseña" },
+        { name: "nombre",     icon: "bi-person",   type: "text",     placeholder: "Tu nombre completo",  label: "Nombre" },
+        { name: "correo",     icon: "bi-envelope",  type: "email",    placeholder: "tu@correo.com",       label: "Correo electrónico" },
+        { name: "contrasena", icon: "bi-lock",      type: "password", placeholder: "Mínimo 8 caracteres", label: "Contraseña" },
     ];
 
     return (
-        <div style={{ minHeight: "100vh", position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={s.page}>
             <UniverseCanvas />
 
-            <div
-                className="animate-slideUp"
-                style={{
-                    position: "relative", zIndex: 10, width: "100%", maxWidth: "420px",
-                    margin: "1rem",
-                    background: "rgba(10, 15, 30, 0.75)",
-                    border: "1px solid rgba(56,139,253,0.25)",
-                    borderRadius: "20px",
-                    backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
-                    boxShadow: "0 32px 80px rgba(0,0,0,0.6), 0 0 60px rgba(56,139,253,0.1)",
-                    padding: "2.5rem",
-                }}
-            >
+            <div className="animate-slideUp" style={s.card}>
                 <div className="text-center mb-4 animate-fadeIn">
-                    <div
-                        className="animate-pulse-glow"
-                        style={{
-                            display: "inline-flex", alignItems: "center", justifyContent: "center",
-                            width: "56px", height: "56px", borderRadius: "16px",
-                            background: "linear-gradient(135deg, rgba(56,139,253,0.2), rgba(56,139,253,0.05))",
-                            border: "1px solid rgba(56,139,253,0.4)", marginBottom: "1rem",
-                        }}
-                    >
-                        <i className="bi bi-person-plus" style={{ fontSize: "1.6rem", color: "#388bfd" }}></i>
+                    <div className="animate-pulse-glow" style={s.logoBox}>
+                        <i className="bi bi-person-plus" style={s.logoIcon}></i>
                     </div>
-                    <h1 style={{ fontSize: "1.5rem", fontWeight: 700, color: "#e2e8f0", margin: 0 }}>
-                        Crear <span style={{ color: "#388bfd", textShadow: "0 0 20px rgba(56,139,253,0.6)" }}>cuenta</span>
+                    <h1 style={s.title}>
+                        Crear <span style={s.titleAccent}>cuenta</span>
                     </h1>
-                    <p style={{ fontSize: "0.8rem", color: "#718096", marginTop: "0.25rem" }}>
-                        Únete a TaskFlow
-                    </p>
+                    <p style={s.subtitle}>Únete a TaskFlow</p>
                 </div>
 
                 <form onSubmit={handleSubmit} noValidate>
                     {fields.map((f, i) => (
                         <div className={`mb-3 animate-slideLeft delay-${i + 1}`} key={f.name}>
                             <label className="tf-label">{f.label}</label>
-                            <div style={{ position: "relative" }}>
+                            <div style={s.inputWrapper}>
                                 <i
                                     className={`bi ${f.icon}`}
-                                    style={{
-                                        position: "absolute", left: "14px", top: "50%",
-                                        transform: "translateY(-50%)",
-                                        color: focused === f.name ? "#388bfd" : "#718096",
-                                        transition: "color 0.2s", zIndex: 1, fontSize: "0.9rem"
-                                    }}
+                                    style={{ ...s.inputIcon, color: focused === f.name ? "#388bfd" : "#718096" }}
                                 ></i>
                                 <input
                                     type={f.type}
                                     name={f.name}
-                                    className={`tf-input${errores[f.name] ? " is-invalid" : ""}`}
-                                    style={{ paddingLeft: "2.5rem", width: "100%" }}
+                                    className={`tf-input tf-input-icon${errores[f.name] ? " is-invalid" : ""}`}
+                                    style={s.inputFull}
                                     value={form[f.name]}
                                     onChange={handleChange}
                                     onFocus={() => setFocused(f.name)}
@@ -261,16 +229,12 @@ const Register = () => {
                     <button
                         type="submit"
                         className="tf-btn tf-btn-primary"
-                        style={{ width: "100%", marginTop: "0.5rem" }}
+                        style={s.submitBtn}
                         disabled={cargando}
                     >
                         {cargando ? (
                             <>
-                                <span style={{
-                                    width: "16px", height: "16px",
-                                    border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "#fff",
-                                    borderRadius: "50%", animation: "spin-slow 0.7s linear infinite", display: "inline-block"
-                                }}></span>
+                                <span style={s.spinner}></span>
                                 Creando cuenta...
                             </>
                         ) : (
@@ -284,15 +248,116 @@ const Register = () => {
 
                 <hr className="tf-divider" />
 
-                <p style={{ textAlign: "center", fontSize: "0.85rem", color: "#718096", margin: 0 }}>
+                <p style={s.footerText}>
                     ¿Ya tienes cuenta?{" "}
-                    <Link to="/login" style={{ color: "#388bfd", textDecoration: "none", fontWeight: 600 }}>
+                    <Link to="/login" style={s.footerLink}>
                         Inicia sesión
                     </Link>
                 </p>
             </div>
         </div>
     );
+};
+
+const s = {
+    canvas: {
+        position: "fixed",
+        inset: 0,
+        width: "100%",
+        height: "100%",
+        zIndex: 0,
+        display: "block",
+    },
+    page: {
+        minHeight: "100vh",
+        position: "relative",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    card: {
+        position: "relative",
+        zIndex: 10,
+        width: "100%",
+        maxWidth: "420px",
+        margin: "1rem",
+        background: "rgba(10, 15, 30, 0.75)",
+        border: "1px solid rgba(56,139,253,0.25)",
+        borderRadius: "20px",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        boxShadow: "0 32px 80px rgba(0,0,0,0.6), 0 0 60px rgba(56,139,253,0.1)",
+        padding: "2.5rem",
+    },
+    logoBox: {
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "56px",
+        height: "56px",
+        borderRadius: "16px",
+        background: "linear-gradient(135deg, rgba(56,139,253,0.2), rgba(56,139,253,0.05))",
+        border: "1px solid rgba(56,139,253,0.4)",
+        marginBottom: "1rem",
+    },
+    logoIcon: {
+        fontSize: "1.6rem",
+        color: "#388bfd",
+    },
+    title: {
+        fontSize: "1.5rem",
+        fontWeight: 700,
+        color: "#e2e8f0",
+        margin: 0,
+    },
+    titleAccent: {
+        color: "#388bfd",
+        textShadow: "0 0 20px rgba(56,139,253,0.6)",
+    },
+    subtitle: {
+        fontSize: "0.8rem",
+        color: "#718096",
+        marginTop: "0.25rem",
+    },
+    inputWrapper: {
+        position: "relative",
+    },
+    inputIcon: {
+        position: "absolute",
+        left: "14px",
+        top: "50%",
+        transform: "translateY(-50%)",
+        transition: "color 0.2s",
+        zIndex: 1,
+        fontSize: "0.9rem",
+    },
+    inputFull: {
+        width: "100%",
+    },
+    submitBtn: {
+        width: "100%",
+        marginTop: "0.5rem",
+    },
+    spinner: {
+        width: "16px",
+        height: "16px",
+        border: "2px solid rgba(255,255,255,0.3)",
+        borderTopColor: "#fff",
+        borderRadius: "50%",
+        animation: "spin-slow 0.7s linear infinite",
+        display: "inline-block",
+    },
+    footerText: {
+        textAlign: "center",
+        fontSize: "0.85rem",
+        color: "#718096",
+        margin: 0,
+    },
+    footerLink: {
+        color: "#388bfd",
+        textDecoration: "none",
+        fontWeight: 600,
+    },
 };
 
 export default Register;
