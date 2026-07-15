@@ -121,7 +121,7 @@ Los endpoints protegidos requieren el header:
 Authorization: Bearer <token>
 ```
 
-### Perfil de usuario (🔒 requiere JWT)
+### Perfil de usuario (requiere JWT)
 
 | Método | Ruta | Descripción |
 |--------|------|-------------|
@@ -129,7 +129,7 @@ Authorization: Bearer <token>
 | PUT | `/usuarios/perfil` | Actualizar nombre y foto de perfil |
 | PUT | `/usuarios/contrasena` | Cambiar contraseña |
 
-### Tareas (🔒 requiere JWT)
+### Tareas (requiere JWT)
 
 | Método | Ruta | Descripción |
 |--------|------|-------------|
@@ -143,7 +143,7 @@ Authorization: Bearer <token>
 Estados válidos: `PENDIENTE`, `EN_PROGRESO`, `FINALIZADA`  
 Prioridades válidas: `BAJA`, `MEDIA`, `ALTA`
 
-### Categorías (🔒 requiere JWT)
+### Categorías (requiere JWT)
 
 | Método | Ruta | Descripción |
 |--------|------|-------------|
@@ -207,15 +207,15 @@ TaskFlow/
 
 ## Estado del proyecto
 
-- ✅ Sprint 1: Configuración del proyecto
-- ✅ Sprint 2: Análisis y diseño
-- ✅ Sprint 3: Backend base con Spring Boot
-- ✅ Sprint 4: Autenticación JWT (registro, login, rutas protegidas)
-- ✅ Sprint 5: CRUD de tareas y categorías
-- ✅ Sprint 6: Dashboard con estadísticas y página de categorías
-- ✅ Sprint 7: Perfil de usuario (editar datos, cambiar contraseña)
-- ✅ Sprint 8: Mejoras de UX (responsivo, spinners, estados vacíos, badges)
-- ✅ Sprint 9: Configuración para producción (CORS, perfil prod, script SQL)
-- ✅ Sprint 10: Documentación final
-- ✅ Sprint 11: Rediseño UI futurista (glassmorphism, animaciones, fondo universo, dark theme)
-- ✅ Sprint 12: Refactor de código (estilos en `const s = {}`, CSS organizado por secciones, comentarios en español)
+- - Sprint 1: Configuración del proyecto
+- - Sprint 2: Análisis y diseño
+- - Sprint 3: Backend base con Spring Boot
+- - Sprint 4: Autenticación JWT (registro, login, rutas protegidas)
+- - Sprint 5: CRUD de tareas y categorías
+- - Sprint 6: Dashboard con estadísticas y página de categorías
+- - Sprint 7: Perfil de usuario (editar datos, cambiar contraseña)
+- - Sprint 8: Mejoras de UX (responsivo, spinners, estados vacíos, badges)
+- - Sprint 9: Configuración para producción (CORS, perfil prod, script SQL)
+- - Sprint 10: Documentación final
+- - Sprint 11: Rediseño UI futurista (glassmorphism, animaciones, fondo universo, dark theme)
+- - Sprint 12: Refactor de código (estilos en `const s = {}`, CSS organizado por secciones, comentarios en español)
