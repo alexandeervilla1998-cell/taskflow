@@ -1,16 +1,50 @@
-# React + Vite
+# TaskFlow — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interfaz web de TaskFlow construida con React 19 y Vite. Diseño futurista con glassmorphism, animaciones de entrada y fondo animado de universo en las páginas de autenticación.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| | Tecnología |
+|---|---|
+| Framework | React 19 + Vite |
+| Estilos | Bootstrap 5 + CSS custom (variables, glassmorphism, animaciones) |
+| Routing | React Router v7 |
+| HTTP | Axios |
+| Alertas | SweetAlert2 |
+| Iconos | Bootstrap Icons |
 
-## React Compiler
+## Correr en local
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm install
+npm run dev
+```
 
-## Expanding the ESLint configuration
+La app queda en `http://localhost:5173`. Requiere el backend corriendo en `http://localhost:8080`.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Estructura
+
+```
+src/
+├── components/
+│   ├── layout/       # Navbar, Sidebar, Footer
+│   └── ui/           # UniverseCanvas (fondo animado compartido)
+├── context/          # AuthContext, AuthProvider
+├── hooks/            # useAuth
+├── layouts/          # MainLayout, AuthLayout
+├── pages/
+│   ├── auth/         # Login, Register
+│   ├── dashboard/    # Dashboard con estadísticas
+│   ├── tasks/        # CRUD de tareas
+│   ├── categories/   # CRUD de categorías
+│   └── profile/      # Perfil de usuario
+├── routes/           # AppRouter, ProtectedRoute, PublicRoute
+├── services/         # api.js, tareaService, categoriaService, usuarioService
+└── styles/           # global.css
+```
+
+## Convenciones de código
+
+- Estilos en `const s = {}` al final de cada componente
+- Comentarios cortos en español, solo cuando el motivo no es obvio
+- CSS organizado en secciones: Variables → Layout → Componentes → Decorativo → Animaciones
