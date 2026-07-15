@@ -19,6 +19,9 @@ Sistema de gestión de tareas personal con autenticación JWT, CRUD completo de 
 - CRUD completo de tareas con filtros por estado y categoría
 - CRUD completo de categorías con selector de color
 - Perfil de usuario: editar nombre y foto, cambiar contraseña
+- Diseño futurista con glassmorphism, animaciones de entrada y efectos glow
+- Fondo animado con universo (estrellas, nebulosas, partículas) en Login y Registro
+- Avatar con live preview al escribir la URL de la foto
 - Diseño responsivo (sidebar colapsable en móvil)
 - Estados de carga con skeleton loaders
 - Estados vacíos con mensajes amigables
@@ -171,7 +174,7 @@ TaskFlow/
 ├── docs/                   # Documentación de análisis y diseño
 ├── frontend/
 │   └── src/
-│       ├── components/     # Navbar, Sidebar, Footer
+│       ├── components/     # Navbar, Sidebar, Footer, ui/UniverseCanvas
 │       ├── context/        # AuthContext, AuthProvider
 │       ├── hooks/          # useAuth
 │       ├── layouts/        # MainLayout, AuthLayout
@@ -214,3 +217,5 @@ TaskFlow/
 - ✅ Sprint 8: Mejoras de UX (responsivo, spinners, estados vacíos, badges)
 - ✅ Sprint 9: Configuración para producción (CORS, perfil prod, script SQL)
 - ✅ Sprint 10: Documentación final
+- ✅ Sprint 11: Rediseño UI futurista (glassmorphism, animaciones, fondo universo, dark theme)
+- ✅ Sprint 12: Refactor de código (estilos en `const s = {}`, CSS organizado por secciones, comentarios en español)
